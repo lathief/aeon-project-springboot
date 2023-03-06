@@ -14,7 +14,4 @@ public class DetailKaryawan {
     private Long id;
     private String nik;
     private String npwp;
-    @OneToOne
-    @JoinColumn(name = "id_karyawan")
-    private Karyawan karyawan;
 }

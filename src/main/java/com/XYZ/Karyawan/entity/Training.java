@@ -1,13 +1,16 @@
 package com.XYZ.Karyawan.entity;
 
+import com.XYZ.Karyawan.entity.audit.DateAudit;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Entity
-public class Training extends DataDate{
+@EqualsAndHashCode(callSuper = true)
+public class Training extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)

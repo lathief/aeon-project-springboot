@@ -1,16 +1,18 @@
 package com.XYZ.Karyawan.entity;
 
 
+import com.XYZ.Karyawan.entity.audit.DateAudit;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Data
-public class Karyawan extends DataDate{
+@EqualsAndHashCode(callSuper = true)
+public class Karyawan extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -23,12 +25,14 @@ public class Karyawan extends DataDate{
     private String jenisKelamin;
     private String nama;
     private String status;
-
     @OneToMany(mappedBy = "karyawan", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<Rekening> rekening;
-
     @OneToMany(mappedBy = "karyawan", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<Karyawan_Training> karyawanTrainings;
+    @OneToOne
+    @JoinColumn(name = "id_karyawan")
+    private DetailKaryawan detailKaryawan;
 }
+

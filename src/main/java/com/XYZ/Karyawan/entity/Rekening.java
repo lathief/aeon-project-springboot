@@ -1,13 +1,16 @@
 package com.XYZ.Karyawan.entity;
 
+import com.XYZ.Karyawan.entity.audit.DateAudit;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Data
-public class Rekening extends DataDate{
+@EqualsAndHashCode(callSuper = true)
+public class Rekening extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -15,7 +18,6 @@ public class Rekening extends DataDate{
     private String jenis;
     private String nama;
     private String nomor;
-
     @ManyToOne
     @JoinColumn(name = "karyawan_id")
     private Karyawan karyawan;
