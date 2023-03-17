@@ -58,7 +58,14 @@ public class KaryawanServiceImpl implements KaryawanService{
         } catch (Exception e){
             return new Response(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    public Response deleteKaryawan(Long id) {
+        if (!karyawanRepo.existsById(id)) {
+            throw new NotFoundException("Karyawan with id " + id + " Didn't exists");
+        }
+        karyawanRepo.deleteById(id);
+        return new Response("Delete karyawan success", HttpStatus.OK);
     }
 
 }

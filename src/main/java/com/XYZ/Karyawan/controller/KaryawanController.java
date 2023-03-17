@@ -38,4 +38,9 @@ public class KaryawanController {
                 nama, paging);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response> deleteKaryawan(@PathVariable Long id){
+        Response result = karyawanService.deleteKaryawan(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

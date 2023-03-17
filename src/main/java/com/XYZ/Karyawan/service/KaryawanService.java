@@ -13,4 +13,5 @@ public interface KaryawanService {
     Response createKaryawan(Karyawan karyawan);
     Response updateKaryawan(Karyawan karyawan);
     Response searchKaryawanByNama(String nama, Pageable pageable);
+    Response deleteKaryawan(Long id);
 }
