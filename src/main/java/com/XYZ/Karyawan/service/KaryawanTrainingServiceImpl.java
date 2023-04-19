@@ -2,7 +2,7 @@ package com.XYZ.Karyawan.service;
 
 import com.XYZ.Karyawan.entity.KaryawanTraining;
 import com.XYZ.Karyawan.entity.exception.NotFoundException;
-import com.XYZ.Karyawan.entity.response.Response;
+import com.XYZ.Karyawan.entity.response.ResponseGlobal;
 import com.XYZ.Karyawan.repository.KaryawanRepo;
 import com.XYZ.Karyawan.repository.KaryawanTrainingRepo;
 import com.XYZ.Karyawan.repository.TrainingRepo;
@@ -22,20 +22,19 @@ public class KaryawanTrainingServiceImpl implements KaryawanTrainingService{
     TrainingRepo trainingRepo;
     @Autowired
     KaryawanRepo karyawanRepo;
-    public Response daftar(Long karyawan_id, Long training_id) {
+    public ResponseGlobal daftar(Long karyawan_id, Long training_id) {
         KaryawanTraining karyawanTraining = new KaryawanTraining();
         if(!karyawanRepo.existsById(karyawan_id) || !trainingRepo.existsById(training_id)){
             throw new NotFoundException("Karyawan atau training tidak ada");
         } else {
-            karyawanTraining.setTanggalTraining(new Date());
             karyawanTraining.setKaryawan(karyawanRepo.findById(karyawan_id).get());
             karyawanTraining.setTraining(trainingRepo.findById(training_id).get());
             karyawanTrainingRepo.save(karyawanTraining);
-            return new Response("Berhasil mendaftar", HttpStatus.OK);
+            return new ResponseGlobal("Berhasil mendaftar", HttpStatus.OK);
         }
     }
 
-    public Response search(String karyawan, String training, Pageable pageable) {
+    public ResponseGlobal search(String karyawan, String training, Pageable pageable) {
         try {
             List<?> data = new ArrayList<>();
             Map<String, Object> response = new HashMap<>();
@@ -52,16 +51,16 @@ public class KaryawanTrainingServiceImpl implements KaryawanTrainingService{
                 result.put("Training", dataPage.getContent());
                 dataPage = karyawanRepo.findByNamaContaining(karyawan, pageable);
                 result.put("Karyawan", dataPage.getContent());
-                return new Response(result, HttpStatus.OK);
+                return new ResponseGlobal(result, HttpStatus.OK);
             }
             data = dataPage.getContent();
             response.put("result", data);
             response.put("currentPage", dataPage.getNumber());
             response.put("totalItems", dataPage.getTotalElements());
             response.put("totalPages", dataPage.getTotalPages());
-            return new Response(response, HttpStatus.OK);
+            return new ResponseGlobal(response, HttpStatus.OK);
         } catch (Exception e){
-            return new Response(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseGlobal(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

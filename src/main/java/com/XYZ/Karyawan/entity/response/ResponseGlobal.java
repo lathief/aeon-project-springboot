@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class Response {
+public class ResponseGlobal {
     private Map<String, Object> response = new HashMap<>();
-    public Response (Object message, HttpStatus httpStatus) {
+    public ResponseGlobal(Object message, HttpStatus httpStatus) {
         this.response.put("Message", message);
         this.response.put("Status", httpStatus);
     }

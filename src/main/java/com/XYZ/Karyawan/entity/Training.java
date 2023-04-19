@@ -19,6 +19,9 @@ public class Training extends DateAudit {
     @Column(name="nama_pengajar")
     private String namaPengajar;
     private String tema;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_training")
+    private DetailTraining detailTraining;
     @JsonIgnore
     @OneToMany(mappedBy = "training", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
