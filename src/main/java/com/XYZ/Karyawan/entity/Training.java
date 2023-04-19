@@ -1,6 +1,7 @@
 package com.XYZ.Karyawan.entity;
 
 import com.XYZ.Karyawan.entity.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,13 +13,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Training extends DateAudit {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name="nama_pengajar")
     private String namaPengajar;
     private String tema;
+    @JsonIgnore
     @OneToMany(mappedBy = "training", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private List<Karyawan_Training> karyawanTrainings;
+    private List<KaryawanTraining> karyawanTrainings;
 }

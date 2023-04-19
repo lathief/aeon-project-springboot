@@ -1,20 +1,18 @@
 package com.XYZ.Karyawan.service;
 
+import com.XYZ.Karyawan.entity.DetailKaryawan;
 import com.XYZ.Karyawan.entity.Karyawan;
+import com.XYZ.Karyawan.entity.Rekening;
 import com.XYZ.Karyawan.entity.exception.NotFoundException;
 import com.XYZ.Karyawan.entity.response.Response;
-import com.XYZ.Karyawan.repository.DetailKaryawanRepo;
-import com.XYZ.Karyawan.repository.KaryawanRepo;
+import com.XYZ.Karyawan.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class KaryawanServiceImpl implements KaryawanService{
@@ -22,6 +20,10 @@ public class KaryawanServiceImpl implements KaryawanService{
     KaryawanRepo karyawanRepo;
     @Autowired
     DetailKaryawanRepo detailKaryawanRepo;
+    @Autowired
+    KaryawanTrainingRepo karyawanTrainingRepo;
+    @Autowired
+    RekeningRepo rekeningRepo;
     public Response findById(Long id) {
         if (!karyawanRepo.existsById(id)) {
             throw new NotFoundException("Karyawan with id " + id + " Didn't exists");
@@ -29,15 +31,22 @@ public class KaryawanServiceImpl implements KaryawanService{
         return new Response(karyawanRepo.findById(id), HttpStatus.OK);
     }
     public Response createKaryawan(Karyawan karyawan) {
+        DetailKaryawan detailKaryawan = new DetailKaryawan("","");
+        karyawan.setDetailKaryawan(detailKaryawan);
         karyawanRepo.save(karyawan);
+        detailKaryawanRepo.save(detailKaryawan);
         return new Response("Create karyawan success", HttpStatus.CREATED);
     }
-    public Response updateKaryawan(Karyawan karyawan) {
-        if (karyawan.getDetailKaryawan() != null){
-            detailKaryawanRepo.updateDetail(karyawan.getId(), karyawan.getDetailKaryawan().getNik(), karyawan.getDetailKaryawan().getNpwp());
+    public Response updateKaryawan(Long id, Karyawan karyawan) {
+        if (!karyawanRepo.existsById(id)) {
+            throw new NotFoundException("Karyawan with id " + id + " Didn't exists");
+        } else {
+            if (karyawan.getDetailKaryawan() != null){
+                detailKaryawanRepo.updateDetail(karyawan.getId(), karyawan.getDetailKaryawan().getNik(), karyawan.getDetailKaryawan().getNpwp());
+            }
+            karyawanRepo.updateKaryawan(id, karyawan.getNama(), karyawan.getStatus(), karyawan.getAlamat(), karyawan.getTanggalLahir(), karyawan.getJenisKelamin(), new Date().toInstant());
+            return new Response("Update karyawan success", HttpStatus.CREATED);
         }
-        karyawanRepo.updateKaryawan(karyawan.getId(), karyawan.getNama(), karyawan.getStatus(), karyawan.getAlamat(), karyawan.getTanggalLahir().toString(), karyawan.getJenisKelamin());
-        return new Response("Update karyawan success", HttpStatus.CREATED);
     }
     public Response searchKaryawanByNama(String nama, Pageable pageable){
         try {
@@ -50,7 +59,7 @@ public class KaryawanServiceImpl implements KaryawanService{
             }
             karyawans = karyawanPage.getContent();
             Map<String, Object> response = new HashMap<>();
-            response.put("tutorials", karyawans);
+            response.put("karyawan", karyawans);
             response.put("currentPage", karyawanPage.getNumber());
             response.put("totalItems", karyawanPage.getTotalElements());
             response.put("totalPages", karyawanPage.getTotalPages());
@@ -66,6 +75,15 @@ public class KaryawanServiceImpl implements KaryawanService{
         }
         karyawanRepo.deleteById(id);
         return new Response("Delete karyawan success", HttpStatus.OK);
+    }
+
+    public Response updateDetail(Long id, DetailKaryawan detailKaryawan) {
+        if (!karyawanRepo.existsById(id)) {
+            throw new NotFoundException("Karyawan with id " + id + " Didn't exists");
+        }
+        detailKaryawanRepo.updateDetail(id, detailKaryawan.getNik(), detailKaryawan.getNpwp());
+        karyawanRepo.updateKaryawan(id, new Date().toInstant());
+        return new Response("Update detail success", HttpStatus.OK);
     }
 
 }

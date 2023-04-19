@@ -2,6 +2,7 @@ package com.XYZ.Karyawan.entity;
 
 
 import com.XYZ.Karyawan.entity.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Karyawan extends DateAudit {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "tanggal_lahir")
@@ -28,10 +29,11 @@ public class Karyawan extends DateAudit {
     @OneToMany(mappedBy = "karyawan", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<Rekening> rekening;
+    @JsonIgnore
     @OneToMany(mappedBy = "karyawan", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private List<Karyawan_Training> karyawanTrainings;
-    @OneToOne
+    private List<KaryawanTraining> karyawanTrainings;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_karyawan")
     private DetailKaryawan detailKaryawan;
 }

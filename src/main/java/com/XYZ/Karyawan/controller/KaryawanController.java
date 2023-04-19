@@ -1,5 +1,6 @@
 package com.XYZ.Karyawan.controller;
 
+import com.XYZ.Karyawan.entity.DetailKaryawan;
 import com.XYZ.Karyawan.entity.Karyawan;
 import com.XYZ.Karyawan.entity.response.Response;
 import com.XYZ.Karyawan.service.KaryawanService;
@@ -20,13 +21,18 @@ public class KaryawanController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping("")
-    public ResponseEntity<Response> createKaryawan(Karyawan karyawan){
+    public ResponseEntity<Response> createKaryawan(@RequestBody Karyawan karyawan){
         Response result = karyawanService.createKaryawan(karyawan);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Response> updateKaryawan(@PathVariable Long id, @RequestBody Karyawan karyawan){
+        Response result = karyawanService.updateKaryawan(id, karyawan);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @PutMapping("")
-    public ResponseEntity<Response> updateKaryawan(Karyawan karyawan){
-        Response result = karyawanService.updateKaryawan(karyawan);
+    @PutMapping("/{id}/detail")
+    public ResponseEntity<Response> updateDetailKaryawan(@PathVariable Long id, @RequestBody DetailKaryawan detailKaryawan){
+        Response result = karyawanService.updateDetail(id, detailKaryawan);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("/list")
